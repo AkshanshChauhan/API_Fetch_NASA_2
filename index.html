@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="title">Mars images API</title>
+</head>
+<style>
+    * {
+        font-family: 'Courier New', Courier, monospace;
+    }
+    body {
+        display: grid;
+        gap: 20px;
+    }
+
+    .voi {
+        display: grid;
+        align-items: center;
+        gap: 10vw;
+        height: fit-content;
+    }
+
+    button {
+        padding: 10px;
+    }
+
+    input {
+        padding: 10px;
+        width: 90vw;
+        min-width: 100px;
+        max-width: 500px;
+        justify-self: center;
+    }
+
+    img {
+        width: 100%;
+        max-width: 500px;
+        min-width: 100px;
+        justify-self: center;
+    }
+
+    table {
+        width: 500px;
+        display: grid;
+        gap: 10px;
+        justify-self: center;
+        margin-top: 10px;
+        min-width: 500px;
+    }
+
+    td:nth-child(1) {
+        padding: 10px 10px;
+        font-weight: 600;
+        border-bottom: 1px solid rgb(180, 180, 180);
+    }
+
+    td:nth-child(2) {
+        padding: 10px 10px;
+        border-bottom: 1px solid rgb(209, 209, 209);
+    }
+</style>
+<body>
+    <input type="tel" placeholder="number" id="number" oninput="getImagesMars(document.getElementById('number').value)">
+    <img src="" id="images">
+    <table>        
+        <tr>
+            <td>Full Name</td>
+            <td id="imagesFullName"></td>
+        </tr>
+        <tr>
+            <td>ID</td>
+            <td id="imagesID"></td>
+        </tr>
+        <tr>
+            <td>Name</td>
+            <td id="imagesName"></td>
+        </tr>
+        <tr>
+            <td>Rover ID</td>
+            <td id="imagesRoverID"></td>
+        </tr>
+        <tr>
+            <td>Earth Date</td>
+            <td id="imagesDate"></td>
+        </tr>
+        <tr>
+            <td>Landing Date</td>
+            <td id="imagesLandingDate"></td>
+        </tr>
+        <tr>
+            <td>Launching Date</td>
+            <td id="imagesLaunchingDate"></td>
+        </tr>
+        <tr>
+            <td>Name OF Rover</td>
+            <td id="roverName"></td>
+        </tr>
+        <tr>
+            <td>Condition</td>
+            <td id="active"></td>
+        </tr>
+    </table>
+</body>
+<script>
+    async function getImagesMars(valueInt) {
+        const req = await fetch("https://api.nasa.gov/mars-photos/api/v1/rovers/curiosity/photos?sol=1000&api_key=gLrNrNPHPII1Tb2wa7IVanxnwyHOfcskZiKiNsWn");
+        const reqpas = await req.json();
+        document.getElementById("title").innerText = reqpas.photos[valueInt].camera.full_name;
+        document.getElementById("imagesFullName").innerText = reqpas.photos[valueInt].camera.full_name;
+        document.getElementById("imagesID").innerText = reqpas.photos[valueInt].camera.id;
+        document.getElementById("imagesName").innerText = reqpas.photos[valueInt].camera.name;
+        document.getElementById("imagesRoverID").innerText = reqpas.photos[valueInt].camera.rover_id;
+        document.getElementById("imagesDate").innerText = reqpas.photos[valueInt].earth_date;
+        document.getElementById("imagesLandingDate").innerText = reqpas.photos[valueInt].rover.landing_date;
+        document.getElementById("imagesLaunchingDate").innerText = reqpas.photos[valueInt].rover.launch_date;
+        document.getElementById("roverName").innerText = reqpas.photos[valueInt].rover.name;
+        document.getElementById("active").innerText = reqpas.photos[valueInt].rover.status;
+        if(reqpas.photos[valueInt].rover.status == "active") {
+            document.getElementById("active").style.background = "green";
+            document.getElementById("active").style.color = "white";
+        } else {
+            document.getElementById("active").style.background = "red";
+            document.getElementById("active").style.color = "white";
+        };
+        document.getElementById("images").setAttribute("src", reqpas.photos[valueInt].img_src);
+    }
+</script>
+</html>
